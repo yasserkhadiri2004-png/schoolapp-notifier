@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --bg: #14161d;
+    --panel: #1c1f29;
+    --panel-2: #232735;
+    --line: #2e3344;
+    --txt: #e8eaf0;
+    --muted: #9aa0b4;
+    --accent: #6c7bff;
+    --accent-soft: #6c7bff22;
+    --alert: #ffb020;
+    --ok: #3ecf8e;
+    --danger: #ff6b6b;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    width: 360px;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .wrap { padding: 16px; }
+
+  /* ----- en-tête ----- */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  .brand h1 { font-size: 15px; font-weight: 650; margin: 0; letter-spacing: -0.2px; }
+  .brand .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; letter-spacing: .3px; text-transform: uppercase; }
+  .logo {
+    width: 30px; height: 30px; border-radius: 9px;
+    background: linear-gradient(135deg, #6c7bff, #9a6cff);
+    display: grid; place-items: center; font-size: 16px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 999px;
+    background: var(--panel-2); color: var(--muted); border: 1px solid var(--line);
+  }
+  .pill.live { color: var(--ok); border-color: #3ecf8e44; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill.live .dot { animation: ping 1.6s ease-out infinite; }
+  @keyframes ping {
+    0% { box-shadow: 0 0 0 0 #3ecf8e88; } 70% { box-shadow: 0 0 0 6px #3ecf8e00; } 100% { box-shadow: 0 0 0 0 #3ecf8e00; }
+  }
+  @media (prefers-reduced-motion: reduce) { .pill.live .dot { animation: none; } }
+
+  /* ----- champs ----- */
+  label { display: block; font-size: 11px; color: var(--muted); margin: 0 0 5px 2px; font-weight: 600; }
+  input[type="text"], input[type="url"], select {
+    width: 100%; background: var(--panel); color: var(--txt);
+    border: 1px solid var(--line); border-radius: 9px; padding: 9px 10px;
+    font-size: 12.5px; outline: none; font-family: inherit;
+  }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field { margin-bottom: 12px; }
+  .row { display: flex; gap: 10px; }
+  .row > .field { flex: 1; }
+
+  details { margin: -2px 0 12px; }
+  details summary {
+    cursor: pointer; font-size: 11px; color: var(--muted); user-select: none;
+    list-style: none; padding: 2px;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; }
+  details[open] summary::before { content: "▾ "; }
+  .hint { font-size: 10.5px; color: var(--muted); margin: 6px 2px 0; }
+
+  /* ----- toggle ----- */
+  .toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 11px 12px; margin-bottom: 14px;
+  }
+  .toggle .t-txt b { font-size: 12.5px; }
+  .toggle .t-txt span { display: block; font-size: 10.5px; color: var(--muted); }
+  .switch { position: relative; width: 42px; height: 24px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0; background: var(--line); border-radius: 999px;
+    transition: .2s; cursor: pointer;
+  }
+  .slider::before {
+    content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px;
+    background: #fff; border-radius: 50%; transition: .2s;
+  }
+  .switch input:checked + .slider { background: var(--accent); }
+  .switch input:checked + .slider::before { transform: translateX(18px); }
+
+  /* ----- boutons ----- */
+  .actions { display: flex; gap: 9px; margin-bottom: 14px; }
+  button {
+    flex: 1; border: 1px solid var(--line); border-radius: 9px; padding: 10px;
+    font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+    background: var(--panel-2); color: var(--txt); transition: .15s;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.08); }
+  button:disabled { opacity: .55; cursor: default; }
+
+  /* ----- statut + aperçu ----- */
+  .status { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; min-height: 16px; }
+  .status b { color: var(--txt); font-weight: 600; }
+  .status.ok b { color: var(--ok); }
+  .status.err b { color: var(--danger); }
+
+  .banner {
+    display: none; font-size: 11px; padding: 9px 10px; border-radius: 9px;
+    background: #ffb02018; border: 1px solid #ffb02055; color: #ffd089; margin-bottom: 12px;
+  }
+  .banner.show { display: block; }
+
+  .preview-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .preview-h label { margin: 0; }
+  .preview {
+    background: #0f1117; border: 1px solid var(--line); border-radius: 9px;
+    padding: 9px 10px; height: 96px; overflow: auto; white-space: pre-wrap;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10.5px; color: #b9c0d4;
+  }
+  .preview:empty::before { content: "Lance « Vérifier maintenant » pour voir ce que l'extension lit sur la page."; color: var(--muted); }
+  ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">🎓</div>
+        <div>
+          <h1>Alerte notes</h1>
+          <div class="sub">SchoolApp</div>
+        </div>
+      </div>
+      <span id="pill" class="pill"><span class="dot"></span><span id="pillTxt">En pause</span></span>
+    </header>
+
+    <div class="field">
+      <label for="url">Adresse de la page de notes</label>
+      <input id="url" type="url" placeholder="https://schoolapp.../mes-notes" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="interval">Vérifier toutes les</label>
+        <select id="interval">
+          <option value="2">2 min</option>
+          <option value="5">5 min</option>
+          <option value="10">10 min</option>
+          <option value="15" selected>15 min</option>
+          <option value="30">30 min</option>
+          <option value="60">1 heure</option>
+        </select>
+      </div>
+    </div>
+
+    <details>
+      <summary>Cibler une zone précise (optionnel)</summary>
+      <div class="field" style="margin-top:8px;">
+        <label for="selector">Sélecteur CSS de la zone des notes</label>
+        <input id="selector" type="text" placeholder="ex. #notes, .grades-table, table" />
+        <p class="hint">Laisse vide pour surveiller toute la page. Utile si la page change souvent (horloge, menus) et déclenche de fausses alertes.</p>
+      </div>
+    </details>
+
+    <div class="toggle">
+      <div class="t-txt"><b>Surveillance active</b><span>Vérifie en arrière-plan même fenêtre fermée</span></div>
+      <label class="switch"><input id="enabled" type="checkbox" /><span class="slider"></span></label>
+    </div>
+
+    <div class="actions">
+      <button id="check">Vérifier maintenant</button>
+      <button id="save" class="primary">Enregistrer</button>
+    </div>
+
+    <div id="status" class="status"></div>
+    <div id="banner" class="banner"></div>
+
+    <div class="preview-h">
+      <label>Ce que je surveille</label>
+    </div>
+    <pre id="preview" class="preview"></pre>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
